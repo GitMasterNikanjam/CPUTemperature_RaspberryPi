@@ -2,7 +2,7 @@
 
 // Define static member variables
 std::string CPUTemperature::errorMessage;
-bool CPUTemperature::warning = false; 
+bool CPUTemperature::warningFlag = false; 
 float CPUTemperature::value = 0.0f;
 std::ifstream CPUTemperature::tempFile;
 std::string CPUTemperature::temperatureStr;
@@ -14,7 +14,7 @@ float CPUTemperature::tempHYST = 75.0;
 
 bool CPUTemperature::begin(void)
 {
-    open();
+    _open();
     
     // Just test tempFile open or not.
     if (!tempFile.is_open()) 
@@ -63,13 +63,13 @@ float CPUTemperature::read(void)
         return 0.0f;
     }
 
-    if( (value > tempOS) && (warning == false) )
+    if( (value > tempOS) && (warningFlag == false) )
     {
-        warning = true;
+        warningFlag = true;
     }
-    else if((value < tempHYST) && (warning == true))
+    else if((value < tempHYST) && (warningFlag == true))
     {
-        warning = false;
+        warningFlag = false;
     }
 
     return value;
@@ -114,7 +114,7 @@ void CPUTemperature::close(void)
     }
 }
 
-void CPUTemperature::open(void)
+void CPUTemperature::_open(void)
 {
     tempFile.open("/sys/class/thermal/thermal_zone0/temp");
 }
